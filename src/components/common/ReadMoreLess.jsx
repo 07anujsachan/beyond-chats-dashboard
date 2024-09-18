@@ -41,7 +41,7 @@ const ReadMoreLess = ({ children, height = 100 }) => {
 						onClick={handleToggle}
 						endIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
 					>
-						{isExpanded ? "Show less" : "Show more"}
+						{isExpanded ? "Read less" : "Read more"}
 					</Button>
 				</Box>
 			) : (

@@ -1,6 +1,6 @@
 import React from "react";
 import ReadMoreLess from "components/common/ReadMoreLess";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -9,9 +9,8 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
-		alignItems: "center",
 		padding: "0.86rem",
-		borderRadius: "5px",
+		borderRadius: "20px",
 		boxShadow: "0 0 0.15rem 0 rgba(224, 224, 224, 0.5)",
 		outline: "0.1rem solid rgba(224, 224, 224, 0.5)",
 		backgroundColor: "#fff",
@@ -21,17 +20,15 @@ const useStyles = makeStyles((theme) => ({
 	source_type_container: {
 		display: "flex",
 		width: "100%",
-		justifyContent: "flex-start",
+		justifyContent: "space-between",
 		alignItems: "center",
+		marginTop: "1rem",
 	},
 	source_type: {
 		fontSize: "0.6rem",
 		color: "var(--color5)",
 		fontWeight: "bold",
 		textTransform: "uppercase",
-		padding: "0.25rem 0.5rem",
-		borderRadius: "0.5rem",
-		backgroundColor: "#f5f5f5",
 	},
 	footer_container: {
 		display: "flex",
@@ -53,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	actions_container: {
 		display: "flex",
-		justifyContent: "flex-end",
+		justifyContent: "space-between",
 		alignItems: "center",
 		// gap: "0.5rem",
+		marginTop: "1rem",
 	},
 }));
 
@@ -63,20 +61,40 @@ const VectorData = ({ data, handleOpenEditDialog, handleDelete }) => {
 	const classes = useStyles();
 	return (
 		<Box className={classes.root}>
+			<Typography
+				sx={{ fontWeight: "500", marginBottom: "0.5rem" }}
+				variant="p"
+				align="left"
+			>
+				Title
+			</Typography>
 			<ReadMoreLess height={50}>{data?.metadata?.text}</ReadMoreLess>
 			<Box className={classes.source_type_container}>
-				<Typography
-					variant="caption"
-					color="textPrimary"
-					className={classes.source_type}
-				>
-					{data?.metadata?.source_type ?? "Unknown Source"}
-				</Typography>
-			</Box>
-
-			<Box className={classes.footer_container}>
-				<Box className={classes.details_container}>
-					<Typography variant="caption" color="textPrimary">
+				<div>
+					<Typography
+						sx={{ fontWeight: "500", marginBottom: "0.9rem" }}
+						variant="p"
+						align="left"
+					>
+						Type
+					</Typography>
+					<Typography
+						variant="subtitle1"
+						color="textPrimary"
+						className={classes.source_type}
+					>
+						{data?.metadata?.source_type ?? "Unknown Source"}
+					</Typography>
+				</div>
+				<div>
+					<Typography
+						sx={{ fontWeight: "500", marginBottom: "0.9rem" }}
+						variant="p"
+						align="left"
+					>
+						Source
+					</Typography>
+					<Typography variant="subtitle1" color="textPrimary">
 						<a
 							href={data?.metadata?.source_url ?? "#"}
 							target="_blank"
@@ -86,24 +104,48 @@ const VectorData = ({ data, handleOpenEditDialog, handleDelete }) => {
 							View Source
 						</a>
 					</Typography>
+				</div>
+				<div>
+					<Typography
+						sx={{ fontWeight: "500", marginBottom: "0.9rem" }}
+						variant="p"
+						align="left"
+					>
+						Created At
+					</Typography>
 					<Typography variant="subtitle1" color="textSecondary">
 						{new Intl.RelativeTimeFormat("en", {
 							numeric: "auto",
 						}).format(-new Date(data?.metadata?.created_at), "days")}
 					</Typography>
-				</Box>
+				</div>
+			</Box>
 
-				<Box className={classes.actions_container}>
-					<IconButton size="medium" onClick={() => handleOpenEditDialog(data)}>
-						<Edit color="primary" fontSize="small" />
-					</IconButton>
-					<IconButton
-						size="medium"
-						onClick={() => handleDelete(data?.vector_id)}
-					>
-						<Delete color="error" fontSize="small" />
-					</IconButton>
-				</Box>
+			<Box className={classes.actions_container}>
+				<Button
+					sx={{
+						borderRadius: "10px",
+						padding: "0.4rem 3rem",
+					}}
+					variant="outlined"
+					size="large"
+					color="primary"
+					onClick={() => handleOpenEditDialog(data)}
+				>
+					Edit
+				</Button>
+				<Button
+					sx={{
+						borderRadius: "10px",
+						padding: "0.4rem 3rem",
+					}}
+					variant="outlined"
+					color="error"
+					size="large"
+					onClick={() => handleDelete(data?.vector_id)}
+				>
+					Delete
+				</Button>
 			</Box>
 		</Box>
 	);

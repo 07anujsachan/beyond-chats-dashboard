@@ -6,10 +6,23 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Tooltip, styled } from "@mui/material";
+import {
+	Avatar,
+	Button,
+	CardActionArea,
+	CardActions,
+	CardContent,
+	CardMedia,
+	Tooltip,
+	Typography,
+	styled,
+} from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import MuiDrawer from "@mui/material/Drawer";
+import Card from "@mui/material/Card";
+import { useUserContext } from "context/UserContext";
+import { useResponsiveContext } from "context/ResponsiveContext";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
 	display: "flex",
@@ -61,7 +74,17 @@ const Drawer = styled(MuiDrawer, {
 	}),
 }));
 
-const LeftDrawer = ({ isOpened, toggleLeftNav, navOptions }) => {
+const LeftDrawer = ({
+	isOpened,
+	toggleLeftNav,
+	navOptions,
+	setShowStartTutorial,
+}) => {
+	const {
+		user: { access_token, email, name, is_god },
+		setUser,
+	} = useUserContext();
+	const { isMobile } = useResponsiveContext();
 	return (
 		<Drawer
 			variant="permanent"
@@ -69,16 +92,31 @@ const LeftDrawer = ({ isOpened, toggleLeftNav, navOptions }) => {
 			open={isOpened}
 			onClose={toggleLeftNav}
 		>
-			<Tooltip
-				title={isOpened ? "Close Left Drawer" : "Open Left Drawer"}
-				arrow
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					paddingLeft: "1rem",
+				}}
 			>
-				<DrawerHeader>
-					<IconButton onClick={toggleLeftNav}>
-						{isOpened ? <ChevronLeftIcon /> : <MenuIcon />}
-					</IconButton>
-				</DrawerHeader>
-			</Tooltip>
+				<Avatar
+					alt={name}
+					src={`https://api.dicebear.com/5.x/micah/svg?seed=${email}`}
+					sx={{ boxShadow: "0px 0px 0px 2px var(--primary)" }}
+					onClick={toggleLeftNav}
+				/>
+				<Tooltip
+					title={isOpened ? "Close Left Drawer" : "Open Left Drawer"}
+					arrow
+				>
+					<DrawerHeader>
+						<IconButton onClick={toggleLeftNav}>
+							{isOpened ? <ChevronLeftIcon /> : <MenuIcon />}
+						</IconButton>
+					</DrawerHeader>
+				</Tooltip>
+			</div>
 			<Divider />
 			<List>
 				{navOptions.map(({ title, Icon, onClick, isActive }, index) => (
@@ -92,7 +130,7 @@ const LeftDrawer = ({ isOpened, toggleLeftNav, navOptions }) => {
 							disablePadding
 							sx={{
 								display: "block",
-								backgroundColor: isActive ? "primary.light" : undefined,
+								borderRight: isActive ? "4px solid #2872FA" : undefined,
 							}}
 							className={`nav-option-${index}`}
 						>
@@ -118,14 +156,75 @@ const LeftDrawer = ({ isOpened, toggleLeftNav, navOptions }) => {
 								</ListItemIcon>
 								<ListItemText
 									primary={title}
-									// sx={{ display: isOpened ? "block" : "none" }}
-									sx={{ opacity: isOpened ? 1 : 0 }}
+									sx={{
+										color: isActive ? "#2872FA" : undefined,
+										opacity: isOpened ? 1 : 0,
+									}}
 								/>
 							</ListItemButton>
 						</ListItem>
 					</Tooltip>
 				))}
 			</List>
+			{isOpened && (
+				<Card
+					sx={{
+						maxWidth: 210,
+						paddingTop: "2rem",
+						borderRadius: "12px",
+						backgroundColor: "#FDECF1",
+						marginTop: isMobile ? "3rem" : "20rem",
+						marginLeft: "1.8rem",
+						display: "flex",
+						alignItems: "center",
+						flexDirection: "column",
+					}}
+				>
+					<CardActionArea
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							flexDirection: "column",
+						}}
+					>
+						<CardMedia
+							component="img"
+							height={isMobile ? "90" : "140"}
+							image="/confusion.png"
+							alt="confused"
+							sx={{
+								width: "auto",
+							}}
+						/>
+						<CardContent>
+							<Typography
+								gutterBottom
+								variant="h5"
+								component="div"
+								style={{ textAlign: "center", color: "red", fontSize: "16px" }}
+							>
+								Confused?
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+					<CardActions>
+						<Button
+							onClick={() => setShowStartTutorial(true)}
+							size="small"
+							style={{
+								backgroundColor: "white",
+								color: "black",
+								borderRadius: "12px",
+								fontSize: isMobile ? "12px" : "16px",
+								padding: "0.6rem 0.8rem",
+								marginLeft: "0.2rem",
+							}}
+						>
+							Take a guided tour
+						</Button>
+					</CardActions>
+				</Card>
+			)}
 		</Drawer>
 	);
 };

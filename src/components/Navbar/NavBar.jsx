@@ -247,14 +247,14 @@ const NavBar = (props) => {
 									/>
 								) : null}
 
-								{!isMobile ? (
+								{/* {!isMobile ? (
 									<Button
 										variant="outlined"
 										onClick={() => props.setShowStartTutorial(true)}
 									>
 										<Typography variant="h6">Guided Tour</Typography>
 									</Button>
-								) : null}
+								) : null} */}
 								{/* ORG Selector */}
 								<Tooltip title="View Orgs">
 									<Button
@@ -508,7 +508,7 @@ const NavBar = (props) => {
 };
 export default withRouter(NavBar);
 
-const Org = ({ org, handleCloseOrgMenu }) => {
+export const Org = ({ org, handleCloseOrgMenu }) => {
 	const history = useHistory();
 	const classes = useStyles2();
 	const { setOrg, org: currOrg } = useOrgContext();

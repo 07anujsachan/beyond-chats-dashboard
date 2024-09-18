@@ -102,10 +102,6 @@ div:where(.swal2-container) {
 	height: 3px;
 }
 
-::-webkit-scrollbar-thumb {
-	background: var(--primary);
-	border-radius: 10px;
-}
 .blurred-row {
 	filter: blur(10px);
 	pointer-events: none;

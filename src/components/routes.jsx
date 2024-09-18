@@ -13,6 +13,7 @@ import {
 	Redirect,
 	matchPath,
 	useHistory,
+	useLocation,
 } from "react-router-dom";
 import MultilineChartIcon from "@mui/icons-material/MultilineChart";
 import InsightsIcon from "@mui/icons-material/Insights";
@@ -82,7 +83,7 @@ function AppRoutes() {
 		const searchParams = new URLSearchParams(history.location.search);
 		return searchParams.get("guide") === "true";
 	});
-	const [isOpened, setIsOpened] = useState(false);
+	const [isOpened, setIsOpened] = useState(true);
 	const [isBackdropOpen, setIsBackdropOpen] = useState(false);
 	const { org } = useOrgContext();
 	const { isMobile } = useResponsiveContext();
@@ -178,13 +179,7 @@ function AppRoutes() {
 			// 	isActive: false,
 			// },
 		],
-		[
-			history,
-			history.location.pathname,
-			org.host_url,
-			handleLogout,
-			isMobile,
-		]
+		[history, history.location.pathname, org.host_url, handleLogout, isMobile]
 	);
 
 	const tourSteps = useMemo(
@@ -277,6 +272,7 @@ function AppRoutes() {
 			};
 		}
 	}, [access_token]);
+	const location = useLocation();
 
 	return (
 		<Suspense fallback={<NewLoader firstPage={true} name="routes" />}>
@@ -288,11 +284,13 @@ function AppRoutes() {
 			</Backdrop>
 			<Switch>
 				<Route path="/">
-					<Navbar
-						navOptions={navOptions}
-						setShowStartTutorial={setShowStartTutorial}
-						toggleLeftNav={toggleLeftNav}
-					/>
+					{!location.pathname.includes("/mind-map") && (
+						<Navbar
+							navOptions={navOptions}
+							setShowStartTutorial={setShowStartTutorial}
+							toggleLeftNav={toggleLeftNav}
+						/>
+					)}
 					<Suspense fallback={<NewLoader firstPage={true} name="routes" />}>
 						<Switch>
 							<Route exact path="/login" component={SignIn} />
@@ -304,7 +302,14 @@ function AppRoutes() {
 							<Route exact path="/forgot-password" component={ForgotPassword} />
 							{access_token && (
 								<>
-									<LeftDrawer {...{ isOpened, toggleLeftNav, navOptions }} />
+									<LeftDrawer
+										{...{
+											isOpened,
+											toggleLeftNav,
+											navOptions,
+											setShowStartTutorial,
+										}}
+									/>
 									<Suspense fallback={<></>}>
 										{showStartTutorial ? (
 											<ReactJoyride
@@ -341,12 +346,17 @@ function AppRoutes() {
 									{/* 100vw - width of small left drawer, also see Nav CSS */}
 									<div
 										style={{
-											width: isMobile ? "100vw" : "calc(100vw - 64px)",
-											height: isMobile
-												? "calc(100dvh - 58px)"
-												: "calc(100dvh - 65px)",
+											width: isMobile
+												? "100vw"
+												: isOpened
+													? "calc(100vw - 275px)"
+													: "calc(100vw - 64px)",
+											// height: isMobile
+											// 	? "calc(100dvh - 58px)"
+											// 	: "calc(100dvh - 65px)",
 											position: "absolute",
 											right: 0,
+											backgroundColor: "#EBF1FE",
 										}}
 									>
 										<Suspense
@@ -373,7 +383,9 @@ function AppRoutes() {
 														<Route
 															exact
 															path="/:org/mind-map"
-															component={MindMap}
+															render={(props) => (
+																<MindMap {...props} toggleNav={toggleLeftNav} />
+															)}
 														/>
 														<Route
 															exact

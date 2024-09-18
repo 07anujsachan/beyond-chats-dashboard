@@ -200,7 +200,10 @@ function AnswerReferencePane() {
 				axiosCancelSource.token
 			);
 			setVectorData(response.data.data.vector_data);
-			setSources({...response.data.data.sources, summary:response.data.data.chat_summary});
+			setSources({
+				...response.data.data.sources,
+				summary: response.data.data.chat_summary,
+			});
 			setLoading(false);
 		} catch (error) {
 			if (error.message !== REQUEST_CANCELED_MESSAGE) setLoading(false);
@@ -312,7 +315,7 @@ const Reference = ({
 			source_url,
 			read_more_label = "Read More",
 			action_id,
-      active=true,
+			active = true,
 		},
 	} = source;
 	const classes = useStyles();
@@ -345,9 +348,13 @@ const Reference = ({
 	}
 	return (
 		<div className={classes.articleRoot}>
-			<Typography variant="subtitle1" component="span" sx={{whiteSpace:"break-spaces"}}>
+			<Typography
+				variant="subtitle1"
+				component="span"
+				sx={{ whiteSpace: "break-spaces" }}
+			>
 				ID {vector_id}:&nbsp;
-				{!active ? "This Data has been deleted\n\n" :""}
+				{!active ? "This Data has been deleted\n\n" : ""}
 				{text.length > 180 && !isShowMoreToggle ? (
 					`${text.slice(0, 180)}...`
 				) : isReadMoreUrlValid ? (
@@ -406,8 +413,8 @@ const Reference = ({
 			<IconButton
 				style={{ position: "absolute", top: 10, right: 0, padding: 0 }}
 				onClick={handleClick}
-        size="large"
-        disabled={!active}
+				size="large"
+				disabled={!active}
 			>
 				<MoreVertIcon />
 			</IconButton>
